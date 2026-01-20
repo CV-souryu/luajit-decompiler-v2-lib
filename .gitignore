@@ -399,3 +399,8 @@ FodyWeavers.xsd
 
 *.sln
 *.vcxproj*
+
+build/
+dist/
+test/
+.DS_Store

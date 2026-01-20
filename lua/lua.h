@@ -1,4 +1,4 @@
-class Lua {
+﻿class Lua {
 public:
 
 	Lua(const Bytecode& bytecode, const Ast& ast, const std::string& filePath, const bool& forceOverwrite, const bool& minimizeDiffs, const bool& unrestrictedAscii);
@@ -19,7 +19,7 @@ private:
 	void write_prefix_expression(const Ast::Expression& expression, const bool& isLineStart);
 	void write_variable(const Ast::Variable& variable, const bool& isLineStart);
 	void write_function_call(const Ast::FunctionCall& functionCall, const bool& isLineStart);
-	void write_assignment(const std::vector<Ast::Variable>& variables, const std::vector<Ast::Expression*>& expressions, const std::string& separator, const bool& isLineStart);
+	void write_assignment(const std::vector<Ast::Variable>& variables, const std::vector<Ast::Expression*>& expressions, const std::string& seperator, const bool& isLineStart);
 	void write_expression_list(const std::vector<Ast::Expression*>& expressions, const Ast::Expression* const& multres);
 	void write_function_definition(const Ast::Function& function, const bool& isMethod);
 	void write_number(const double& number);
@@ -29,8 +29,8 @@ private:
 	template <typename... Strings>
 	void write(const std::string& string, const Strings&... strings);
 	void write_indent();
-	void create_file();
-	void close_file();
+	//void create_file();
+	//void close_file();
 	void write_file();
 
 	const Bytecode& bytecode;
@@ -38,7 +38,7 @@ private:
 	const bool forceOverwrite;
 	const bool minimizeDiffs;
 	const bool unrestrictedAscii;
-	HANDLE file = INVALID_HANDLE_VALUE;
+	//HANDLE file = INVALID_HANDLE_VALUE;
 	std::string writeBuffer;
 	uint32_t indentLevel = 0;
 	uint64_t prototypeDataLeft = 0;

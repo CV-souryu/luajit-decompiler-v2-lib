@@ -1,4 +1,4 @@
-class Bytecode {
+﻿class Bytecode {
 public:
 
 	class Prototype;
@@ -8,9 +8,9 @@ public:
 	struct TableNode;
 	struct VariableInfo;
 	struct Instruction;
-	#include "prototype.h"
-	#include "constants.h"
-	#include "instructions.h"
+#include "prototype.h"
+#include "constants.h"
+#include "instructions.h"
 
 	Bytecode(const std::string& filePath);
 	~Bytecode();
@@ -35,13 +35,14 @@ private:
 
 	void read_header();
 	void read_prototypes();
-	void open_file();
-	void close_file();
+	//void open_file();
+	//void close_file();
 	void read_file(const uint32_t& byteCount);
 	uint32_t read_uleb128();
 	bool buffer_next_block();
 
-	HANDLE file = INVALID_HANDLE_VALUE;
+	//HANDLE file = INVALID_HANDLE_VALUE;
+	std::ifstream stream_file;
 	uint64_t fileSize = 0;
 	uint64_t bytesUnread = 0;
 	std::vector<uint8_t> fileBuffer;

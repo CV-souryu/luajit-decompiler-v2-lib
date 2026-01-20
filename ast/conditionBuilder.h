@@ -1,4 +1,4 @@
-struct Ast::ConditionBuilder {
+struct ConditionBuilder {
 	enum TYPE {
 		ASSIGNMENT,
 		STATEMENT
@@ -115,7 +115,7 @@ struct Ast::ConditionBuilder {
 		case Bytecode::BC_OP_JMP:
 			return Node::UNCONDITIONAL;
 		default:
-			throw nullptr;
+			throw;
 		}
 	}
 
@@ -300,7 +300,7 @@ struct Ast::ConditionBuilder {
 			return node->inverted ? build_binary(node->type, build_expression(node->leftNode), build_expression(node->rightNode))
 				: build_not(build_binary(node->type, build_expression(node->leftNode), build_expression(node->rightNode)));
 		default:
-			throw nullptr;
+			throw;
 		}
 	}
 
@@ -346,7 +346,7 @@ struct Ast::ConditionBuilder {
 			expression->binaryOperation->type = AST_BINARY_OR;
 			break;
 		default:
-			throw nullptr;
+			throw;
 		}
 
 		expression->binaryOperation->leftOperand = leftOperand;

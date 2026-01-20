@@ -1,23 +1,24 @@
-#include "..\main.h"
+﻿#include "../main.h"
 
 Lua::Lua(const Bytecode& bytecode, const Ast& ast, const std::string& filePath, const bool& forceOverwrite, const bool& minimizeDiffs, const bool& unrestrictedAscii)
-	: bytecode(bytecode), ast(ast), filePath(filePath), forceOverwrite(forceOverwrite), minimizeDiffs(minimizeDiffs), unrestrictedAscii(unrestrictedAscii) {}
+	: bytecode(bytecode), ast(ast), filePath(filePath), forceOverwrite(forceOverwrite), minimizeDiffs(minimizeDiffs), unrestrictedAscii(unrestrictedAscii) {
+}
 
 Lua::~Lua() {
-	close_file();
+	//close_file();
 }
 
 void Lua::operator()() {
-	print_progress_bar();
+	//print_progress_bar();
 	prototypeDataLeft = bytecode.prototypesTotalSize;
 	write_header();
 	if (ast.chunk->block.size()) write_block(*ast.chunk, ast.chunk->block);
 	prototypeDataLeft -= ast.chunk->prototype.prototypeSize;
-	print_progress_bar(bytecode.prototypesTotalSize - prototypeDataLeft, bytecode.prototypesTotalSize);
-	create_file();
+	//print_progress_bar(bytecode.prototypesTotalSize - prototypeDataLeft, bytecode.prototypesTotalSize);
+	//create_file();
 	write_file();
-	close_file();
-	erase_progress_bar();
+	//close_file();
+	//erase_progress_bar();
 }
 
 void Lua::write_header() {
@@ -167,7 +168,8 @@ void Lua::write_block(const Ast::Function& function, const std::vector<Ast::Stat
 					previousLineIsEmpty = true;
 					continue;
 				}
-			} else {
+			}
+			else {
 				write_indent();
 				write("local ");
 				write_assignment(block[i]->assignment.variables, block[i]->assignment.expressions, " = ", false);
@@ -209,7 +211,8 @@ void Lua::write_block(const Ast::Function& function, const std::vector<Ast::Stat
 					write_variable(*block[i]->assignment.variables.back().table->variable, false);
 					write(":", block[i]->assignment.variables.back().tableIndex->constant->string);
 					write_function_definition(*block[i]->assignment.expressions.back()->function, true);
-				} else {
+				}
+				else {
 					write_variable(block[i]->assignment.variables.back(), false);
 					write_function_definition(*block[i]->assignment.expressions.back()->function, false);
 				}
@@ -253,7 +256,8 @@ void Lua::write_block(const Ast::Function& function, const std::vector<Ast::Stat
 						write_block(function, elseBlock->front()->block);
 						indentLevel--;
 						write_indent();
-					} else if (elseBlock->size() == 2
+					}
+					else if (elseBlock->size() == 2
 						&& elseBlock->front()->type == Ast::AST_STATEMENT_IF
 						&& elseBlock->back()->type == Ast::AST_STATEMENT_ELSE) {
 						write("elseif ");
@@ -265,7 +269,8 @@ void Lua::write_block(const Ast::Function& function, const std::vector<Ast::Stat
 						write_indent();
 						elseBlock = &elseBlock->back()->block;
 						continue;
-					} else {
+					}
+					else {
 						write("else", NEW_LINE);
 						indentLevel++;
 						write_block(function, *elseBlock);
@@ -314,7 +319,7 @@ void Lua::write_block(const Ast::Function& function, const std::vector<Ast::Stat
 			write("::", function.labels[block[i]->instruction.label].name, "::");
 			break;
 		default:
-			throw nullptr;
+			throw;
 		}
 
 		write(NEW_LINE);
@@ -426,7 +431,8 @@ void Lua::write_expression(const Ast::Expression& expression, const bool& usePar
 
 					if (expression.table->fields[nextFieldIndex].key->type == Ast::AST_EXPRESSION_CONSTANT && expression.table->fields[nextFieldIndex].key->constant->isName) {
 						write(expression.table->fields[nextFieldIndex].key->constant->string);
-					} else {
+					}
+					else {
 						write("[");
 						write_expression(*expression.table->fields[nextFieldIndex].key, false);
 						write("]");
@@ -469,9 +475,11 @@ void Lua::write_expression(const Ast::Expression& expression, const bool& usePar
 
 				write_expression(*expression.table->fields[nextFieldIndex].value, false);
 				nextFieldIndex++;
-			} else if (!expression.table->multresField && nextListIndex >= expression.table->constants.list.size()) {
+			}
+			else if (!expression.table->multresField && nextListIndex >= expression.table->constants.list.size()) {
 				break;
-			} else {
+			}
+			else {
 				if (!isFirstField) {
 					write(",", NEW_LINE);
 					write_indent();
@@ -505,7 +513,8 @@ void Lua::write_expression(const Ast::Expression& expression, const bool& usePar
 
 			if (expression.table->constants.fields[i].key->constant->isName) {
 				write(expression.table->constants.fields[i].key->constant->string);
-			} else {
+			}
+			else {
 				write("[");
 				write_expression(*expression.table->constants.fields[i].key, false);
 				write("]");
@@ -524,7 +533,8 @@ void Lua::write_expression(const Ast::Expression& expression, const bool& usePar
 
 			if (expression.table->fields[i].key->type == Ast::AST_EXPRESSION_CONSTANT && expression.table->fields[i].key->constant->isName) {
 				write(expression.table->fields[i].key->constant->string);
-			} else {
+			}
+			else {
 				write("[");
 				write_expression(*expression.table->fields[i].key, false);
 				write("]");
@@ -561,9 +571,11 @@ void Lua::write_expression(const Ast::Expression& expression, const bool& usePar
 			case 7:
 				parentheses = true;
 			}
-		} else if (operandPrecedence < operatorPrecedence) {
+		}
+		else if (operandPrecedence < operatorPrecedence) {
 			parentheses = true;
-		} else if (operatorPrecedence == 7 && expression.binaryOperation->leftOperand->type == Ast::AST_EXPRESSION_CONSTANT) {
+		}
+		else if (operatorPrecedence == 7 && expression.binaryOperation->leftOperand->type == Ast::AST_EXPRESSION_CONSTANT) {
 			switch (expression.binaryOperation->leftOperand->constant->type) {
 			case Ast::AST_CONSTANT_NUMBER:
 			case Ast::AST_CONSTANT_CDATA_IMAGINARY:
@@ -637,7 +649,8 @@ void Lua::write_expression(const Ast::Expression& expression, const bool& usePar
 				case 5:
 					parentheses = true;
 				}
-			} else if (operandPrecedence < operatorPrecedence) {
+			}
+			else if (operandPrecedence < operatorPrecedence) {
 				parentheses = true;
 			}
 		}
@@ -689,7 +702,7 @@ void Lua::write_variable(const Ast::Variable& variable, const bool& isLineStart)
 	switch (variable.type) {
 	case Ast::AST_VARIABLE_SLOT:
 	case Ast::AST_VARIABLE_UPVALUE:
-		if (!(*variable.slotScope)->name.size()) throw nullptr;
+		if (!(*variable.slotScope)->name.size()) throw;
 		write((*variable.slotScope)->name);
 		break;
 	case Ast::AST_VARIABLE_GLOBAL:
@@ -714,7 +727,8 @@ void Lua::write_function_call(const Ast::FunctionCall& functionCall, const bool&
 	if (functionCall.isMethod) {
 		write_prefix_expression(*functionCall.function->variable->table, isLineStart);
 		write(":", functionCall.function->variable->tableIndex->constant->string);
-	} else {
+	}
+	else {
 		write_prefix_expression(*functionCall.function, isLineStart);
 	}
 
@@ -723,14 +737,14 @@ void Lua::write_function_call(const Ast::FunctionCall& functionCall, const bool&
 	write(")");
 }
 
-void Lua::write_assignment(const std::vector<Ast::Variable>& variables, const std::vector<Ast::Expression*>& expressions, const std::string& separator, const bool& isLineStart) {
+void Lua::write_assignment(const std::vector<Ast::Variable>& variables, const std::vector<Ast::Expression*>& expressions, const std::string& seperator, const bool& isLineStart) {
 	for (uint8_t i = 0; i < variables.size(); i++) {
 		write_variable(variables[i], i ? false : isLineStart);
 		if (i != variables.size() - 1) write(", ");
 	}
 
 	if (!expressions.size()) return;
-	write(separator);
+	write(seperator);
 
 	for (uint8_t i = 0; i < expressions.size(); i++) {
 		if (i != expressions.size() - 1) {
@@ -800,7 +814,8 @@ void Lua::write_function_definition(const Ast::Function& function, const bool& i
 #endif
 	if (function.block.size()) {
 		write_block(function, function.block);
-	} else {
+	}
+	else {
 		write_indent();
 		write("return", NEW_LINE);
 	}
@@ -809,18 +824,10 @@ void Lua::write_function_definition(const Ast::Function& function, const bool& i
 	write_indent();
 	write("end");
 	prototypeDataLeft -= function.prototype.prototypeSize;
-	print_progress_bar(bytecode.prototypesTotalSize - prototypeDataLeft, bytecode.prototypesTotalSize);
+	//print_progress_bar(bytecode.prototypesTotalSize - prototypeDataLeft, bytecode.prototypesTotalSize);
 }
 
 void Lua::write_number(const double& number) {
-	static const auto try_string_to_number = [](const std::string& string, const double& number)->bool {
-		try {
-			return std::stod(string) == number;
-		} catch (...) {
-			return false;
-		}
-	};
-
 	const uint64_t rawDouble = std::bit_cast<uint64_t>(number);
 
 	if ((rawDouble & DOUBLE_EXPONENT) == DOUBLE_SPECIAL) {
@@ -832,14 +839,14 @@ void Lua::write_number(const double& number) {
 	string.resize(std::snprintf(nullptr, 0, "%1.15g", number));
 	std::snprintf(string.data(), string.size() + 1, "%1.15g", number);
 
-	if (!try_string_to_number(string, number)) {
+	if (std::stod(string) != number) {
 		string.resize(std::snprintf(nullptr, 0, "%1.16g", number));
 		std::snprintf(string.data(), string.size() + 1, "%1.16g", number);
 
-		if (!try_string_to_number(string, number)) {
+		if (std::stod(string) != number) {
 			string.resize(std::snprintf(nullptr, 0, "%1.17g", number));
 			std::snprintf(string.data(), string.size() + 1, "%1.17g", number);
-			assert(try_string_to_number(string, number), "Failed to convert number to valid string", filePath, DEBUG_INFO);
+			assert(std::stod(string) == number, "Failed to convert number to valid string", filePath, DEBUG_INFO);
 		}
 	}
 
@@ -856,7 +863,7 @@ void Lua::write_string(const std::string& string) {
 
 		if (unrestrictedAscii || !(value & 0x80)) {
 			if ((string[i] >= ' '
-					&& string[i] <= '~')
+				&& string[i] <= '~')
 				|| (unrestrictedAscii
 					&& string[i] >= 0x80)) {
 				switch (string[i]) {
@@ -892,7 +899,8 @@ void Lua::write_string(const std::string& string) {
 				write("\\r");
 				continue;
 			}
-		} else if ((value & 0xE0) == 0xC0) {
+		}
+		else if ((value & 0xE0) == 0xC0) {
 			if (i + 1 < string.size()) {
 				value <<= 8;
 				value |= string[i + 1];
@@ -906,7 +914,8 @@ void Lua::write_string(const std::string& string) {
 					continue;
 				}
 			}
-		} else if ((value & 0xF0) == 0xE0) {
+		}
+		else if ((value & 0xF0) == 0xE0) {
 			if (i + 2 < string.size()) {
 				value <<= 16;
 				value |= (uint16_t)string[i + 1] << 8;
@@ -914,7 +923,7 @@ void Lua::write_string(const std::string& string) {
 
 				if ((value & 0xC0C0) == 0x8080
 					&& ((value >= 0xE0A080
-							&& value < 0xEDA080)
+						&& value < 0xEDA080)
 						|| (value > 0xEDBFBF
 							&& value <= 0xEFBFBF))) {
 					writeBuffer += string[i];
@@ -924,7 +933,8 @@ void Lua::write_string(const std::string& string) {
 					continue;
 				}
 			}
-		} else if ((value & 0xF8) == 0xF0) {
+		}
+		else if ((value & 0xF8) == 0xF0) {
 			if (i + 3 < string.size()) {
 				value <<= 24;
 				value |= (uint32_t)string[i + 1] << 16;
@@ -1001,31 +1011,33 @@ void Lua::write_indent() {
 	return write(std::string(indentLevel, '\t'));
 }
 
-void Lua::create_file() {
-#ifndef _DEBUG
-	if (!forceOverwrite) {
-		file = CreateFileA(filePath.c_str(), GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-		if (file != INVALID_HANDLE_VALUE) {
-			close_file();
-			assert(MessageBoxA(NULL, ("The file " + filePath + " already exists.\n\nDo you want to overwrite it?").c_str(), PROGRAM_NAME, MB_ICONWARNING | MB_YESNO | MB_DEFBUTTON2) == IDYES,
-				"File already exists", filePath, DEBUG_INFO);
-		}
-	}
-#endif
-	file = CreateFileA(filePath.c_str(), GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
-	assert(file != INVALID_HANDLE_VALUE, "Unable to create file", filePath, DEBUG_INFO);
-}
-
-void Lua::close_file() {
-	if (file == INVALID_HANDLE_VALUE) return;
-	CloseHandle(file);
-	file = INVALID_HANDLE_VALUE;
-}
+//void Lua::create_file() {
+//#ifndef _DEBUG
+//	if (!forceOverwrite) {
+//		file = CreateFileA(filePath.c_str(), GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+//
+//		if (file != INVALID_HANDLE_VALUE) {
+//			close_file();
+//			assert(MessageBoxA(NULL, ("The file " + filePath + " already exists.\n\nDo you want to overwrite it?").c_str(), PROGRAM_NAME, MB_ICONWARNING | MB_YESNO | MB_DEFBUTTON2) == IDYES,
+//				"File already exists", filePath, DEBUG_INFO);
+//		}
+//	}
+//#endif
+//	file = CreateFileA(filePath.c_str(), GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+//	assert(file != INVALID_HANDLE_VALUE, "Unable to create file", filePath, DEBUG_INFO);
+//}
+//
+//void Lua::close_file() {
+//	if (file == INVALID_HANDLE_VALUE) return;
+//	CloseHandle(file);
+//	file = INVALID_HANDLE_VALUE;
+//}
 
 void Lua::write_file() {
-	DWORD charsWritten = 0;
-	assert(WriteFile(file, writeBuffer.data(), writeBuffer.size(), &charsWritten, NULL) && !(writeBuffer.size() - charsWritten), "Failed writing to file", filePath, DEBUG_INFO);
-	writeBuffer.clear();
-	writeBuffer.shrink_to_fit();
+	std::ofstream  file(filePath, std::ios::out | std::ios::trunc);
+	file << writeBuffer;
+	//	DWORD charsWritten = 0;
+	//assert(WriteFile(file, writeBuffer.data(), writeBuffer.size(), &charsWritten, NULL) && !(writeBuffer.size() - charsWritten), "Failed writing to file", filePath, DEBUG_INFO);
+	//writeBuffer.clear();
+	//writeBuffer.shrink_to_fit();
 }

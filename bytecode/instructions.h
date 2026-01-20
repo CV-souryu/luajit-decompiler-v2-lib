@@ -1,4 +1,4 @@
-static constexpr uint16_t BC_OP_JMP_BIAS = 0x8000;
+﻿static constexpr uint16_t BC_OP_JMP_BIAS = 0x8000;
 
 enum BC_OP {
 	BC_OP_ISLT, // if A<VAR> < D<VAR> then JMP
@@ -101,7 +101,7 @@ enum BC_OP {
 	BC_OP_INVALID
 };
 
-struct Bytecode::Instruction {
+struct Instruction {
 	BC_OP type;
 	uint8_t a = 0;
 	uint8_t b = 0;

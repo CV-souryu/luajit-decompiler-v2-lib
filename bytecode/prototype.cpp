@@ -1,4 +1,4 @@
-#include "..\main.h"
+﻿#include "../main.h"
 
 Bytecode::Prototype::Prototype(const Bytecode& bytecode) : bytecode(bytecode) {}
 
@@ -62,7 +62,8 @@ void Bytecode::Prototype::read_instructions() {
 		if (is_op_abc_format(instructions[i].type)) {
 			instructions[i].c = get_next_byte();
 			instructions[i].b = get_next_byte();
-		} else {
+		}
+		else {
 			instructions[i].d = get_next_byte();
 			instructions[i].d |= (uint16_t)get_next_byte() << 8;
 		}
@@ -131,7 +132,8 @@ void Bytecode::Prototype::read_number_constants() {
 			numberConstants[i].type = BC_KNUM_NUM;
 			numberConstants[i].number = get_uleb128_33();
 			numberConstants[i].number |= (uint64_t)get_uleb128() << 32;
-		} else {
+		}
+		else {
 			numberConstants[i].type = BC_KNUM_INT;
 			numberConstants[i].integer = get_uleb128_33();
 		}
@@ -146,12 +148,14 @@ void Bytecode::Prototype::read_debug_info() {
 		for (uint32_t i = 0; i < lineMap.size(); i++) {
 			lineMap[i] = get_next_byte();
 		}
-	} else if (header.lineCount < 65536) {
+	}
+	else if (header.lineCount < 65536) {
 		for (uint32_t i = 0; i < lineMap.size(); i++) {
 			lineMap[i] = get_next_byte();
 			lineMap[i] |= (uint16_t)get_next_byte() << 8;
 		}
-	} else {
+	}
+	else {
 		for (uint32_t i = 0; i < lineMap.size(); i++) {
 			lineMap[i] = get_next_byte();
 			lineMap[i] |= (uint32_t)get_next_byte() << 8;
@@ -175,7 +179,8 @@ void Bytecode::Prototype::read_debug_info() {
 			variableInfos.back().type = BC_VAR_STR;
 			variableInfos.back().name += byte;
 			variableInfos.back().name += get_string();
-		} else {
+		}
+		else {
 			variableInfos.back().type = (BC_VAR)byte;
 		}
 
@@ -186,7 +191,8 @@ void Bytecode::Prototype::read_debug_info() {
 			variableInfos.back().isParameter = true;
 			parameterCount++;
 			variableInfos.back().scopeEnd = get_uleb128() - 2;
-		} else {
+		}
+		else {
 			variableInfos.back().scopeBegin = scopeOffset - 2;
 			variableInfos.back().scopeEnd = variableInfos.back().scopeBegin + get_uleb128();
 		}
